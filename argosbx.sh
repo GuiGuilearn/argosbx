@@ -2,10 +2,16 @@
 export LANG=en_US.UTF-8
 mkdir -p "$HOME/agsbx"
 url='https://raw.githubusercontent.com/yonggekkk/argosbx/main/argosbx.sh'
-case "${*##* }" in list|del|upx|ups|upa|res) ;; *)
+
+case "${1## }" in list|del|upx|ups|upa|res) ;; *)
 cmd=""
 for v in uuid vlpt vmpt vwpt hypt tupt xhpt vxpt anpt arpt sspt sopt nvpt xupt xcpt reym cdnym argo agn agk warp name oap; do
-[ -n "${!v+x}" ] && cmd+="$v=\"${!v}\" "
+U="${v^^}"                       # 对应的大写名
+if [ -n "${!v+x}" ]; then         # 小写已设置
+  cmd+="$v=${!v} "
+elif [ -n "${!U+x}" ]; then       # 小写没设，检查大写
+  cmd+="$v=${!U} "                # 统一转成小写键传给脚本
+fi
 done
 main="bash <(curl -Ls $url)"
 cmd+="$main${*:+ $*}"
